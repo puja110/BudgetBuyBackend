@@ -60,3 +60,113 @@ td {
 th {
   background-color: #f4f4f4;
 }
+
+/* Edit/Delete buttons styling */
+.item-actions {
+  margin-top: 10px;
+}
+
+.delete_btn,
+.edit_btn {
+  font-size: 12px;
+  padding: 5px 10px;
+  width: 80px;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.delete_btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+}
+
+.delete_btn:hover {
+  background-color: #d32f2f;
+}
+
+.edit_btn {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+}
+
+.edit_btn:hover {
+  background-color: #388e3c;
+}
+
+/* List styling */
+#items_list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+li {
+  background-color: #f9f9f9;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+li .item-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Edit/Delete buttons styles */
+.delete_btn,
+.edit_btn {
+  font-size: 12px;
+  padding: 5px 10px;
+}
+
+/* Edit Modal Styling */
+#editModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  width: 300px;
+}
+
+#editModal form {
+  display: flex;
+  flex-direction: column;
+}
+
+#editModal input,
+#editModal textarea {
+  margin-bottom: 10px;
+  padding: 8px;
+  font-size: 14px;
+}
+
+#editModal button {
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#cancel_edit {
+  background-color: #ccc;
+}
+
+/* Modal background (overlay) */
+#editModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: none;
+}
