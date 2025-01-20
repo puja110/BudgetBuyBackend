@@ -1,11 +1,11 @@
 from flask import Flask, render_template, request, jsonify
-from flask_jwt_extended import JWTManager, create_access_token
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
 # Secret key to encode the JWT token
-app.config['JWT_SECRET_KEY'] = 'a5fc&hA82@9p$^Y!dD0wQb9Dh5zJ1'  # Change this to a secure secret key
+app.config['JWT_SECRET_KEY'] = 'a5fc&hA82@9p$^Y!dD0wQb9Dh5zJ1'
 jwt = JWTManager(app)
 
 users = []
@@ -55,8 +55,17 @@ def login():
     access_token = create_access_token(identity=username)
     return jsonify({"access_token": access_token}), 200
 
+# Protected Route Example (only accessible with a valid JWT token)
+@app.route('/protected', methods=['GET'])
+@jwt_required()
+def protected():
+    # Get current logged in user from the token
+    current_user = get_jwt_identity()
+    return jsonify({"message": f"Welcome {current_user}, this is a protected route!"}), 200
+
 # POST API to create an item
 @app.route('/api/item', methods=['POST'])
+@jwt_required()
 def create_item():
     global item_id_counter
     data = request.get_json()
@@ -84,11 +93,13 @@ def create_item():
 
 # GET API to fetch all posted items
 @app.route('/api/items', methods=['GET'])
+@jwt_required()
 def get_items():
     return jsonify(items)
 
 # GET API to find an item by its ID
 @app.route('/api/item/<int:item_id>', methods=['GET'])
+@jwt_required()
 def find_item(item_id):
     item = next((item for item in items if item['id'] == item_id), None)
     if item:
@@ -97,6 +108,7 @@ def find_item(item_id):
 
 # PUT API to update an item by ID
 @app.route('/api/item/<int:item_id>', methods=['PUT'])
+@jwt_required()
 def update_item(item_id):
     data = request.get_json()
 
@@ -117,6 +129,7 @@ def update_item(item_id):
 
 # DELETE API to delete an item by ID
 @app.route('/api/item/<int:item_id>', methods=['DELETE'])
+@jwt_required()
 def delete_item(item_id):
     global items
     
