@@ -1,9 +1,38 @@
 from flask import Flask, render_template, request, jsonify
+from werkzeug.security import generate_password_hash
 
 app = Flask(__name__)
 
+users = []
+
 items = [] # List to store posted items
 item_id_counter = 1 # Unique id for item
+
+# Helper function to find a user by username
+def find_user(username):
+    return next((user for user in users if user['username'] == username), None)
+
+# Route for User Registration
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+
+    # Check if user already exists
+    if find_user(username):
+        return jsonify({"message": "User already exists"}), 400
+
+    # Hash the password
+    hashed_password = generate_password_hash(password, method='sha256')
+
+    # Save user to the in-memory "database"
+    users.append({
+        'username': username,
+        'password': hashed_password
+    })
+
+    return jsonify({"message": "User created successfully"}), 201
 
 # POST API to create an item
 @app.route('/api/item', methods=['POST'])
