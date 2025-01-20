@@ -1,7 +1,12 @@
 from flask import Flask, render_template, request, jsonify
-from werkzeug.security import generate_password_hash
+from flask_jwt_extended import JWTManager, create_access_token
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
+
+# Secret key to encode the JWT token
+app.config['JWT_SECRET_KEY'] = 'a5fc&hA82@9p$^Y!dD0wQb9Dh5zJ1'  # Change this to a secure secret key
+jwt = JWTManager(app)
 
 users = []
 
@@ -33,6 +38,22 @@ def register():
     })
 
     return jsonify({"message": "User created successfully"}), 201
+
+# Route for User Login
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+
+    user = find_user(username)
+    
+    if not user or not check_password_hash(user['password'], password):
+        return jsonify({"message": "Invalid credentials"}), 401
+
+    # Create JWT token
+    access_token = create_access_token(identity=username)
+    return jsonify({"access_token": access_token}), 200
 
 # POST API to create an item
 @app.route('/api/item', methods=['POST'])
