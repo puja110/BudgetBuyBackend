@@ -63,6 +63,13 @@ def protected():
     current_user = get_jwt_identity()
     return jsonify({"message": f"Welcome {current_user}, this is a protected route!"}), 200
 
+# Route for User Logout
+@app.route('/logout', methods=['POST'])
+@jwt_required()
+def logout():
+    # No action needed on server side as the client should just delete the token
+    return jsonify({"message": "Logged out successfully"}), 200
+
 # POST API to create an item
 @app.route('/api/item', methods=['POST'])
 @jwt_required()
